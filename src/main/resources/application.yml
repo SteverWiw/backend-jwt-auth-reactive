@@ -1,0 +1,29 @@
+server:
+  port: ${PORT:8080}
+
+spring:
+  r2dbc:
+    url: ${DB_URL:r2dbc:postgresql://localhost:5432/db_inventory}
+    username: ${DB_USERNAME:ajscore}
+    password: ${DB_PASSWORD:2qUWihtKZBwh7PFTQoRf}
+
+application:
+  request:
+    mappings: /app-jwt-auth
+    origin: http://localhost:4200/
+  encoder:
+    secret: 8A685DF45F5F11846004B0683B67BD8646ED8DC501641EC3F2DBF5C0DB7
+    iteration: 33
+    keylength: 256
+  jwt:
+    jwt-secret: 86113AA658B5A70D1D10F5305EAB9CE8675B2C9FACDF7D6910E87596132A94ED
+
+springdoc:
+  api-docs:
+    path: /api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+
+logging:
+  level:
+    org.hibernate.SQL: DEBUG
