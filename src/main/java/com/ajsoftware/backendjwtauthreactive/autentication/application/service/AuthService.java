@@ -42,10 +42,13 @@ public class AuthService implements AuthPort {
     public Mono<ResponseEntity<ResponseRest<AuthResponse>>> login(LoginRequestDto loginRequestDto) {
 
         return userService.findByUserName(loginRequestDto.getUserName())
-                .filter(userDetails -> passwordEncoder.encode(loginRequestDto.getPassword()).equals(userDetails.getPassword()))
-                .flatMap(userEntity -> {
-                  AuthResponse authResponse = AuthResponse.builder().token(jwtUtil.getToken(userEntity)).build();
-                   return responseUtil.createResponse(authResponse);
+                 .flatMap(userEntity -> {
+                     if (passwordEncoder.encode(loginRequestDto.getPassword()).equals(userEntity.getPassword())) {
+                         AuthResponse authResponse = AuthResponse.builder().token(jwtUtil.getToken(userEntity)).build();
+                         return responseUtil.createResponse(authResponse);
+                     } else {
+                         return Mono.error(new BadCredentialsException("Password does not match"));
+                     }
                 })
                 .switchIfEmpty( responseUtil.handleErrorResponseGeneric(CustomErrorCode.USER_NOTFOUND.getMessage(), CustomErrorCode.USER_NOTFOUND.getCode(),  CustomErrorCode.USER_NOTFOUND.getHttpCode()))
                 .onErrorResume(UsernameNotFoundException.class, e ->

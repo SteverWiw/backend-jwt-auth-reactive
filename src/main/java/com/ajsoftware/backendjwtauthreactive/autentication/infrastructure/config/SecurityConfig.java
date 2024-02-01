@@ -43,7 +43,6 @@ public class SecurityConfig {
                 .authorizeExchange(exchanges -> exchanges
                         .pathMatchers(HttpMethod.POST, "/v1/api/auth/**").permitAll()
                         .pathMatchers(HttpMethod.OPTIONS).permitAll()
-                        .pathMatchers(HttpMethod.POST, "/v1/api/demo/**").authenticated()
                         .anyExchange().authenticated())
                 .csrf(ServerHttpSecurity.CsrfSpec::disable)
                 .cors(withDefaults())
